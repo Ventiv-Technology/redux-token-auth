@@ -1,0 +1,13 @@
+[ignore]
+.*/node_modules/batchflow/.*
+.*/node_modules/editions/.*
+.*/node_modules/fbjs/lib/Deferred.js.flow
+.*/node_modules/fbjs/lib/shallowEqual.js.flow
+.*/node_modules/react-side-effect/node_modules/fbjs/flow/.*
+
+[include]
+
+[libs]
+lib/Types.js
+
+[options]
