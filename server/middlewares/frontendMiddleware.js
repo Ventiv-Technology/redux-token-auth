@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const compression = require('compression');
 const pkg = require(path.resolve(process.cwd(), 'package.json'));
+const proxy = require('http-proxy-middleware');
 
 // Dev middleware
 const addDevMiddlewares = (app, webpackConfig) => {
@@ -16,6 +17,8 @@ const addDevMiddlewares = (app, webpackConfig) => {
     silent: true,
     stats: 'errors-only',
   });
+
+  app.use('/oauth/*', proxy({ target: 'http://localhost:8080/', changeOrigin: true }));
 
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
@@ -52,6 +55,8 @@ const addProdMiddlewares = (app, options) => {
   // and other good practices on official Express.js docs http://mxs.is/googmy
   app.use(compression());
   app.use(publicPath, express.static(outputPath));
+
+  app.use('/oauth', proxy('localhost:8080/oauth'));
 
   app.get('*', (req, res) => res.sendFile(path.resolve(outputPath, 'index.html')));
 };
