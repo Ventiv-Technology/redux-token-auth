@@ -99,12 +99,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 .login-screen .footer {
-    position:fixed;
-    left:0px;
-    bottom:0px;
-    height:30px;
-    width:100%;
-    text-align: center;
-    color: #444444;
-    font-size: 80%;
+  position:fixed;
+  left:0px;
+  bottom:0px;
+  height:30px;
+  width:100%;
+  text-align: center;
+  color: #444444;
+  font-size: 80%;
 }

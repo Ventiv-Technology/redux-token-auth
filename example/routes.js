@@ -39,12 +39,14 @@ export default function createRoutes(store) {
       getComponent(nextState, cb) {
         const importModules = Promise.all([
           System.import('../lib/containers/Login'),
+          System.import('../lib/containers/Login/reducer'),
         ]);
 
         const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
+        importModules.then(([component, reducer]) => {
           renderRoute(component);
+          injectReducer('login', reducer.default);
         });
 
         importModules.catch(errorLoading);
