@@ -9,7 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
 import SagaMonitor from './utils/sagaMonitor';
 import { authenticationSaga } from '../lib/sagas';
-import { listenForAuthSuccess } from './sagas';
+import { listenForAuthChange } from './sagas';
 
 const sagaMiddleware = createSagaMiddleware({ sagaMonitor: SagaMonitor });
 const devtools = window.devToolsExtension || (() => noop => noop);
@@ -39,7 +39,7 @@ export default function configureStore(initialState = {}, history) {
 
   // Global Saga - Authenitcation
   sagaMiddleware.run(authenticationSaga());
-  sagaMiddleware.run(listenForAuthSuccess);
+  sagaMiddleware.run(listenForAuthChange);
 
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
