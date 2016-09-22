@@ -5,7 +5,7 @@
 import { push } from 'react-router-redux';
 import { take, put, race } from 'redux-saga/effects';
 
-import { AUTH_SUCCESS, SIGN_OUT } from '../lib/constants';
+import { AUTH_SUCCESS, SIGN_OUT } from 'redux-token-auth/lib/constants';
 
 export function* listenForAuthChange() : Generator<*, *, *> {
   while (true) {  // eslint-disable-line

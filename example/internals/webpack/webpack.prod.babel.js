@@ -16,13 +16,6 @@ module.exports = require('./webpack.base.babel')({
     path.join(process.cwd(), 'lib/index.js'),
   ],
 
-  babelQuery: {
-    plugins: [
-      'transform-flow-strip-types',
-      'transform-react-jsx',
-    ],
-  },
-
   // Utilize long-term caching by adding content hashes (not compilation hashes) to compiled assets
   output: {
     filename: '[name].[chunkhash].js',
@@ -46,7 +39,6 @@ module.exports = require('./webpack.base.babel')({
       clearMessages: true,
     }),
   ],
-  plugins2: ['transform-flow-strip-types'],
   plugins: [
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',

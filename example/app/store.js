@@ -8,7 +8,7 @@ import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
 import SagaMonitor from './utils/sagaMonitor';
-import { authenticationSaga } from '../lib/sagas';
+import { authenticationSaga } from 'redux-token-auth/dist/sagas';
 import { listenForAuthChange } from './sagas';
 
 const sagaMiddleware = createSagaMiddleware({ sagaMonitor: SagaMonitor });

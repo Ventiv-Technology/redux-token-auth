@@ -56,8 +56,6 @@ const addProdMiddlewares = (app, options) => {
   app.use(compression());
   app.use(publicPath, express.static(outputPath));
 
-  app.use('/oauth', proxy('localhost:8080/oauth'));
-
   app.get('*', (req, res) => res.sendFile(path.resolve(outputPath, 'index.html')));
 };
 
@@ -66,12 +64,9 @@ const addProdMiddlewares = (app, options) => {
  */
 module.exports = (app, options) => {
   const isProd = process.env.NODE_ENV === 'production';
-  const isExample = process.env.NODE_APP === 'example';
 
   if (isProd) {
     addProdMiddlewares(app, options);
-  } else if (isExample) {
-    addDevMiddlewares(app, require('../../internals/webpack/webpack.example.babel'));
   } else {
     addDevMiddlewares(app, require('../../internals/webpack/webpack.dev.babel'));
   }

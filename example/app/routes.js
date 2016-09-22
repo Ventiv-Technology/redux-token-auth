@@ -38,8 +38,8 @@ export default function createRoutes(store) {
       name: 'login',
       getComponent(nextState, cb) {
         const importModules = Promise.all([
-          System.import('../lib/containers/Login'),
-          System.import('../lib/containers/Login/reducer'),
+          System.import('redux-token-auth/dist/containers/Login'),
+          System.import('redux-token-auth/dist/containers/Login/reducer'),
         ]);
 
         const renderRoute = loadModule(cb);
