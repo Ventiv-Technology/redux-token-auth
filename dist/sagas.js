@@ -21,7 +21,9 @@ export var defaultOptions = {
   removeAuthToken: TokenUtils.removeAuthToken,
   getToken: AuthUtils.getToken,
   refreshToken: AuthUtils.refreshToken,
-  inactivitySignoutSec: 10
+  inactivitySignoutSec: 3500,
+  oauthClientId: 'acme',
+  oauthClientSecret: 'acmesecret'
 };
 
 var getTokenAuthorizationCall = function getTokenAuthorizationCall(options, credentialsOrToken) {
@@ -167,88 +169,92 @@ export function authenticationSaga(opts) {
             options = Object.assign({}, defaultOptions, opts);
             inactivityWatcher = void 0;
 
-            // Get the existing token - if any
+            // Push variables into AuthUtils
 
-            _context3.next = 4;
+            AuthUtils.setClientId(options.clientId);
+            AuthUtils.setClientSecret(options.clientSecret);
+
+            // Get the existing token - if any
+            _context3.next = 6;
             return call(options.getAuthToken);
 
-          case 4:
+          case 6:
             token = _context3.sent;
 
-          case 5:
+          case 7:
             if (!true) {
-              _context3.next = 36;
+              _context3.next = 38;
               break;
             }
 
             if (!token) {
-              _context3.next = 10;
+              _context3.next = 12;
               break;
             }
 
-            _context3.next = 9;
+            _context3.next = 11;
             return call(authorize, options, token);
 
-          case 9:
+          case 11:
             token = _context3.sent;
 
-          case 10:
+          case 12:
             if (token) {
-              _context3.next = 21;
+              _context3.next = 23;
               break;
             }
 
-            _context3.next = 13;
+            _context3.next = 15;
             return take(Constants.LOG_IN);
 
-          case 13:
+          case 15:
             loginAction = _context3.sent;
 
             if (!(loginAction === undefined)) {
-              _context3.next = 16;
+              _context3.next = 18;
               break;
             }
 
             throw new Error('Login Action must contain username / password');
 
-          case 16:
+          case 18:
             _username = loginAction.username;
             _password = loginAction.password;
-            _context3.next = 20;
+            _context3.next = 22;
             return call(authorize, options, { username: _username, password: _password });
 
-          case 20:
+          case 22:
             token = _context3.sent;
 
-          case 21:
+          case 23:
             if (!token) {
-              _context3.next = 34;
+              _context3.next = 36;
               break;
             }
 
             if (inactivityWatcher) {
-              _context3.next = 26;
+              _context3.next = 28;
               break;
             }
 
-            _context3.next = 25;
+            _context3.next = 27;
             return fork(watchForInactivity, options);
 
-          case 25:
+          case 27:
             inactivityWatcher = _context3.sent;
 
-          case 26:
-            _context3.next = 28;
+          case 28:
+            _context3.next = 30;
             return race({
               expired: delay(token.expires_in * 1000, true), // TODO: Go XXXX seconds early?
               signout: take(Constants.SIGN_OUT)
             });
 
-          case 28:
+          case 30:
             raceResponse = _context3.sent;
 
             if (!(raceResponse && raceResponse.signout)) {
-              _context3.next = 34;
+              _context3.next = 36;
               break;
             }
 
@@ -259,18 +265,18 @@ export function authenticationSaga(opts) {
             }
 
             // Remove the token from the stored
-            _context3.next = 33;
+            _context3.next = 35;
             return call(options.removeAuthToken);
 
-          case 33:
+          case 35:
 
             token = null;
 
-          case 34:
-            _context3.next = 5;
+          case 36:
+            _context3.next = 7;
             break;
 
-          case 36:
+          case 38:
           case 'end':
             return _context3.stop();
         }

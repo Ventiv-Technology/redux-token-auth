@@ -9,22 +9,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 import TokenUtils from './TokenUtils';
 
+var clientId = '';
+var clientSecret = '';
+
 var AuthUtils = function () {
   function AuthUtils() {
     _classCallCheck(this, AuthUtils);
   }
 
   _createClass(AuthUtils, null, [{
+    key: 'setClientId',
+    value: function setClientId(val) {
+      clientId = val;
+    }
+  }, {
+    key: 'setClientSecret',
+    value: function setClientSecret(val) {
+      clientSecret = val;
+    }
+  }, {
+    key: 'getAuth',
+    value: function getAuth() {
+      return btoa(clientId + ':' + clientSecret);
+    }
+  }, {
     key: 'getToken',
     value: function getToken(username, password) {
-      return fetch('/oauth/token', { method: 'POST', headers: { Authorization: 'Basic YWNtZTphY21lc2VjcmV0', 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=password&username=' + username + '&password=' + password }).then(function (response) {
+      return fetch('/oauth/token', { method: 'POST', headers: { Authorization: 'Basic ' + AuthUtils.getAuth(), 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=password&username=' + username + '&password=' + password }).then(function (response) {
         return response.json();
       }).then(TokenUtils.toToken);
     }
   }, {
     key: 'refreshToken',
     value: function refreshToken(token) {
-      return fetch('/oauth/token', { method: 'POST', headers: { Authorization: 'Basic YWNtZTphY21lc2VjcmV0', 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + token.refresh_token }).then(function (response) {
+      return fetch('/oauth/token', { method: 'POST', headers: { Authorization: 'Basic ' + AuthUtils.getAuth(), 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'grant_type=refresh_token&refresh_token=' + token.refresh_token }).then(function (response) {
         return response.json();
       }).then(TokenUtils.toToken);
     }
