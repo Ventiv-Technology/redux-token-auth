@@ -183,7 +183,7 @@ export function authenticationSaga(opts) {
 
           case 7:
             if (!true) {
-              _context3.next = 38;
+              _context3.next = 37;
               break;
             }
 
@@ -200,7 +200,7 @@ export function authenticationSaga(opts) {
 
           case 12:
             if (token) {
-              _context3.next = 23;
+              _context3.next = 22;
               break;
             }
 
@@ -218,43 +218,42 @@ export function authenticationSaga(opts) {
             throw new Error('Login Action must contain username / password');
 
           case 18:
-            _username = loginAction.username;
-            _password = loginAction.password;
-            _context3.next = 22;
+            _username = loginAction.username, _password = loginAction.password;
+            _context3.next = 21;
             return call(authorize, options, { username: _username, password: _password });
 
-          case 22:
+          case 21:
             token = _context3.sent;
 
-          case 23:
+          case 22:
             if (!token) {
-              _context3.next = 36;
+              _context3.next = 35;
               break;
             }
 
             if (inactivityWatcher) {
-              _context3.next = 28;
+              _context3.next = 27;
               break;
             }
 
-            _context3.next = 27;
+            _context3.next = 26;
             return fork(watchForInactivity, options);
 
-          case 27:
+          case 26:
             inactivityWatcher = _context3.sent;
 
-          case 28:
-            _context3.next = 30;
+          case 27:
+            _context3.next = 29;
             return race({
               expired: delay(token.expires_in * 1000, true), // TODO: Go XXXX seconds early?
               signout: take(Constants.SIGN_OUT)
             });
 
-          case 30:
+          case 29:
             raceResponse = _context3.sent;
 
             if (!(raceResponse && raceResponse.signout)) {
-              _context3.next = 36;
+              _context3.next = 35;
               break;
             }
 
@@ -265,18 +264,18 @@ export function authenticationSaga(opts) {
             }
 
             // Remove the token from the stored
-            _context3.next = 35;
+            _context3.next = 34;
             return call(options.removeAuthToken);
 
-          case 35:
+          case 34:
 
             token = null;
 
-          case 36:
+          case 35:
             _context3.next = 7;
             break;
 
-          case 38:
+          case 37:
           case 'end':
             return _context3.stop();
         }

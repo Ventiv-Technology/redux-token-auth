@@ -24,7 +24,7 @@ var HoverStyle = function (_React$Component) {
   function HoverStyle(props) {
     _classCallCheck(this, HoverStyle);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(HoverStyle).call(this, props));
+    var _this = _possibleConstructorReturn(this, (HoverStyle.__proto__ || Object.getPrototypeOf(HoverStyle)).call(this, props));
 
     _this.state = {
       hovering: false

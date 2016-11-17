@@ -42,6 +42,9 @@ module.exports = {
       { test: /\.js$/,
         loader: 'babel',
         exclude: [/node_modules/],
+        query: {
+          presets: ['react', 'es2015', 'stage-0'],
+        },
       },
       { test: /\.jpe?g$|\.gif$|\.png$|\.svg$/i,
         loader: 'null-loader',
@@ -75,9 +78,11 @@ module.exports = {
   // required for enzyme to work properly
   externals: {
     jsdom: 'window',
-    'react/addons': true,
+    cheerio: 'window',
     'react/lib/ExecutionEnvironment': true,
+    'react/addons': true,
     'react/lib/ReactContext': 'window',
+    sinon: 'window.sinon',
   },
   resolve: {
     modulesDirectories: modules,

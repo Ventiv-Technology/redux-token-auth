@@ -2,9 +2,9 @@
  * Login Reducer
  */
 
+import { fromJS } from 'immutable';
 import { CHANGE_USERNAME, CHANGE_PASSWORD } from './constants';
 import { AUTH_FAILURE, AUTH_SUCCESS } from '../../constants';
-import { fromJS } from 'immutable';
 
 // The initial state of the App
 var initialState = fromJS({
@@ -14,7 +14,7 @@ var initialState = fromJS({
 });
 
 function loginReducer() {
-  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
 
   switch (action.type) {

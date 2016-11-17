@@ -12,12 +12,12 @@ import { changeUsername as changeUsernameAction, changePassword as changePasswor
 import HoverStyle from '../../components/HoverStyle';
 
 var Login = function Login(_ref) {
-  var username = _ref.username;
-  var password = _ref.password;
-  var authFailure = _ref.authFailure;
-  var login = _ref.login;
-  var changeUsername = _ref.changeUsername;
-  var changePassword = _ref.changePassword;
+  var username = _ref.username,
+      password = _ref.password,
+      authFailure = _ref.authFailure,
+      login = _ref.login,
+      changeUsername = _ref.changeUsername,
+      changePassword = _ref.changePassword;
 
   var AuthFailureMessage = authFailure ? React.createElement(
     'div',
