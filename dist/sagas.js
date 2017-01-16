@@ -84,84 +84,89 @@ export function authorize(options, credentialsOrToken) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          put(authenticating(true));
+          _context2.next = 2;
+          return put(authenticating(true));
+
+        case 2:
           authFailureConstant = TokenUtils.toToken(credentialsOrToken) ? Constants.REFRESH_TOKEN : Constants.GET_TOKEN;
-          _context2.prev = 2;
-          _context2.next = 5;
+          _context2.prev = 3;
+          _context2.next = 6;
           return race({
             token: getTokenAuthorizationCall(options, credentialsOrToken),
             signout: take(Constants.SIGN_OUT)
           });
 
-        case 5:
+        case 6:
           raceResponse = _context2.sent;
 
           if (!(raceResponse && raceResponse.token)) {
-            _context2.next = 16;
+            _context2.next = 17;
             break;
           }
 
           token = TokenUtils.toToken(raceResponse.token);
 
           if (!token) {
-            _context2.next = 14;
+            _context2.next = 15;
             break;
           }
 
-          _context2.next = 11;
+          _context2.next = 12;
           return call(options.setAuthToken, token);
 
-        case 11:
-          _context2.next = 13;
+        case 12:
+          _context2.next = 14;
           return put(authSuccess(token));
 
-        case 13:
+        case 14:
           return _context2.abrupt('return', token);
 
-        case 14:
-          _context2.next = 18;
+        case 15:
+          _context2.next = 19;
           break;
 
-        case 16:
+        case 17:
           if (!(raceResponse && raceResponse.signout)) {
-            _context2.next = 18;
+            _context2.next = 19;
             break;
           }
 
           return _context2.abrupt('return', null);
 
-        case 18:
-          _context2.next = 25;
+        case 19:
+          _context2.next = 26;
           break;
 
-        case 20:
-          _context2.prev = 20;
-          _context2.t0 = _context2['catch'](2);
-          _context2.next = 24;
+        case 21:
+          _context2.prev = 21;
+          _context2.t0 = _context2['catch'](3);
+          _context2.next = 25;
           return put(authFailure(_context2.t0, authFailureConstant));
 
-        case 24:
+        case 25:
           return _context2.abrupt('return', null);
 
-        case 25:
-          _context2.prev = 25;
+        case 26:
+          _context2.prev = 26;
+          _context2.next = 29;
+          return put(authenticating(false));
 
-          put(authenticating(false));
-          return _context2.finish(25);
-
-        case 28:
-          _context2.next = 30;
-          return put(authFailure(Constants.INVALID_TOKEN_ERR, authFailureConstant));
+        case 29:
+          return _context2.finish(26);
 
         case 30:
+          _context2.next = 32;
+          return put(authFailure(Constants.INVALID_TOKEN_ERR, authFailureConstant));
+
+        case 32:
           return _context2.abrupt('return', null);
 
-        case 31:
+        case 33:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _marked[1], this, [[2, 20, 25, 28]]);
+  }, _marked[1], this, [[3, 21, 26, 30]]);
 }
 
 export function authenticationSaga(opts) {
