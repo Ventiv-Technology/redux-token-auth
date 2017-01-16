@@ -12,7 +12,7 @@ import { delay } from 'redux-saga';
 import TokenUtils from './TokenUtils';
 import AuthUtils from './AuthUtils';
 import * as Constants from './constants';
-import { authSuccess, authFailure, signOut } from './actions';
+import { authenticating, authSuccess, authFailure, signOut } from './actions';
 
 // Token Services
 export var defaultOptions = {
@@ -84,77 +84,84 @@ export function authorize(options, credentialsOrToken) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
+          put(authenticating(true));
           authFailureConstant = TokenUtils.toToken(credentialsOrToken) ? Constants.REFRESH_TOKEN : Constants.GET_TOKEN;
-          _context2.prev = 1;
-          _context2.next = 4;
+          _context2.prev = 2;
+          _context2.next = 5;
           return race({
             token: getTokenAuthorizationCall(options, credentialsOrToken),
             signout: take(Constants.SIGN_OUT)
           });
 
-        case 4:
+        case 5:
           raceResponse = _context2.sent;
 
           if (!(raceResponse && raceResponse.token)) {
-            _context2.next = 15;
+            _context2.next = 16;
             break;
           }
 
           token = TokenUtils.toToken(raceResponse.token);
 
           if (!token) {
-            _context2.next = 13;
+            _context2.next = 14;
             break;
           }
 
-          _context2.next = 10;
+          _context2.next = 11;
           return call(options.setAuthToken, token);
 
-        case 10:
-          _context2.next = 12;
+        case 11:
+          _context2.next = 13;
           return put(authSuccess(token));
 
-        case 12:
+        case 13:
           return _context2.abrupt('return', token);
 
-        case 13:
-          _context2.next = 17;
+        case 14:
+          _context2.next = 18;
           break;
 
-        case 15:
+        case 16:
           if (!(raceResponse && raceResponse.signout)) {
-            _context2.next = 17;
+            _context2.next = 18;
             break;
           }
 
           return _context2.abrupt('return', null);
 
-        case 17:
-          _context2.next = 24;
+        case 18:
+          _context2.next = 25;
           break;
 
-        case 19:
-          _context2.prev = 19;
-          _context2.t0 = _context2['catch'](1);
-          _context2.next = 23;
+        case 20:
+          _context2.prev = 20;
+          _context2.t0 = _context2['catch'](2);
+          _context2.next = 24;
           return put(authFailure(_context2.t0, authFailureConstant));
 
-        case 23:
+        case 24:
           return _context2.abrupt('return', null);
 
-        case 24:
-          _context2.next = 26;
+        case 25:
+          _context2.prev = 25;
+
+          put(authenticating(false));
+          return _context2.finish(25);
+
+        case 28:
+          _context2.next = 30;
           return put(authFailure(Constants.INVALID_TOKEN_ERR, authFailureConstant));
 
-        case 26:
+        case 30:
           return _context2.abrupt('return', null);
 
-        case 27:
+        case 31:
         case 'end':
           return _context2.stop();
       }
     }
-  }, _marked[1], this, [[1, 19]]);
+  }, _marked[1], this, [[2, 20, 25, 28]]);
 }
 
 export function authenticationSaga(opts) {

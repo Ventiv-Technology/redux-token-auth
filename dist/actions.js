@@ -33,3 +33,10 @@ export function signOut() {
     type: Constants.SIGN_OUT
   };
 }
+
+export function authenticating(isAuthenticating) {
+  return {
+    type: Constants.AUTHENTICATING,
+    isAuthenticating: isAuthenticating
+  };
+}

@@ -13,3 +13,4 @@ export var AUTH_FAILURE = 'spring-redux-oauth/constants/AUTH_FAILURE';
 export var GET_TOKEN = 'GET_TOKEN';
 export var REFRESH_TOKEN = 'REFRESH_TOKEN';
 export var INVALID_TOKEN_ERR = 'Server did not respond with a token';
+export var AUTHENTICATING = 'AUTHENTICATING';
