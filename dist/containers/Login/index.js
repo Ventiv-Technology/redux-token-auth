@@ -1,15 +1,24 @@
-/**
- * Sample Login container.
- * NOTE: Expects the containers above it to have 100% height / width.
- *
- * 
- */
-/* eslint-disable jsx-a11y/href-no-hash */
-import React from 'react';
-import { connect } from 'react-redux';
-import { login as loginAction } from '../../actions';
-import { changeUsername as changeUsernameAction, changePassword as changePasswordAction } from './actions';
-import HoverStyle from '../../components/HoverStyle';
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _actions = require('../../actions');
+
+var _actions2 = require('./actions');
+
+var _HoverStyle = require('../../components/HoverStyle');
+
+var _HoverStyle2 = _interopRequireDefault(_HoverStyle);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Login = function Login(_ref) {
   var username = _ref.username,
@@ -19,52 +28,52 @@ var Login = function Login(_ref) {
       changeUsername = _ref.changeUsername,
       changePassword = _ref.changePassword;
 
-  var AuthFailureMessage = authFailure ? React.createElement(
+  var AuthFailureMessage = authFailure ? _react2.default.createElement(
     'div',
     null,
     'Invalid username and password.'
   ) : null;
 
-  return React.createElement(
+  return _react2.default.createElement(
     'div',
     { style: styles.loginScreen },
-    React.createElement(
+    _react2.default.createElement(
       'div',
       { style: styles.loginPage },
-      React.createElement(
+      _react2.default.createElement(
         'div',
         { style: styles.form },
         AuthFailureMessage,
-        React.createElement(
+        _react2.default.createElement(
           'div',
           { className: 'login-form' },
-          React.createElement('input', { style: styles.input, type: 'text', placeholder: 'Username', id: 'username', name: 'username', value: username, onChange: changeUsername }),
-          React.createElement('input', { style: styles.input, type: 'password', placeholder: 'Password', id: 'password', name: 'password', value: password, onChange: changePassword }),
-          React.createElement(
-            HoverStyle,
+          _react2.default.createElement('input', { style: styles.input, type: 'text', placeholder: 'Username', id: 'username', name: 'username', value: username, onChange: changeUsername }),
+          _react2.default.createElement('input', { style: styles.input, type: 'password', placeholder: 'Password', id: 'password', name: 'password', value: password, onChange: changePassword }),
+          _react2.default.createElement(
+            _HoverStyle2.default,
             { style: styles.loginButton, hoverStyle: styles.loginButtonHover, onClick: function onClick() {
                 return login(username, password);
               } },
-            React.createElement(
+            _react2.default.createElement(
               'button',
               null,
               'login'
             )
           ),
-          React.createElement(
+          _react2.default.createElement(
             'p',
             { style: styles.message },
             'Not registered? ',
-            React.createElement(
+            _react2.default.createElement(
               'a',
               { style: styles.messageLink, href: '#' },
               'Create an account'
             )
           ),
-          React.createElement(
+          _react2.default.createElement(
             'p',
             { style: styles.message },
-            React.createElement(
+            _react2.default.createElement(
               'a',
               { style: styles.messageLink, href: '#' },
               'Forgot Password?'
@@ -74,7 +83,14 @@ var Login = function Login(_ref) {
       )
     )
   );
-};
+}; /**
+    * Sample Login container.
+    * NOTE: Expects the containers above it to have 100% height / width.
+    *
+    * 
+    */
+/* eslint-disable jsx-a11y/href-no-hash */
+
 
 var styles = {
   loginScreen: {
@@ -160,15 +176,15 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch: dispatch,
     login: function login(username, password) {
-      return dispatch(loginAction(username, password));
+      return dispatch((0, _actions.login)(username, password));
     },
     changeUsername: function changeUsername(e) {
-      return dispatch(changeUsernameAction(e.target.value));
+      return dispatch((0, _actions2.changeUsername)(e.target.value));
     },
     changePassword: function changePassword(e) {
-      return dispatch(changePasswordAction(e.target.value));
+      return dispatch((0, _actions2.changePassword)(e.target.value));
     }
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);

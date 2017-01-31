@@ -1,33 +1,54 @@
-var _marked = [watchForInactivity, authorize].map(regeneratorRuntime.mark);
+'use strict';
 
-/**
- * Main saga and supporting sagas for authentication
- *
- * 
- */
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.defaultOptions = undefined;
+exports.authorize = authorize;
+exports.authenticationSaga = authenticationSaga;
 
-import { take, call, race, put, fork } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+var _effects = require('redux-saga/effects');
 
-import TokenUtils from './TokenUtils';
-import AuthUtils from './AuthUtils';
-import * as Constants from './constants';
-import { authenticating, authSuccess, authFailure, signOut } from './actions';
+var _reduxSaga = require('redux-saga');
+
+var _TokenUtils = require('./TokenUtils');
+
+var _TokenUtils2 = _interopRequireDefault(_TokenUtils);
+
+var _AuthUtils = require('./AuthUtils');
+
+var _AuthUtils2 = _interopRequireDefault(_AuthUtils);
+
+var _constants = require('./constants');
+
+var Constants = _interopRequireWildcard(_constants);
+
+var _actions = require('./actions');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _marked = [watchForInactivity, authorize].map(regeneratorRuntime.mark); /**
+                                                                             * Main saga and supporting sagas for authentication
+                                                                             *
+                                                                             * 
+                                                                             */
 
 // Token Services
-export var defaultOptions = {
-  getAuthToken: TokenUtils.getAuthToken,
-  setAuthToken: TokenUtils.setAuthToken,
-  removeAuthToken: TokenUtils.removeAuthToken,
-  getToken: AuthUtils.getToken,
-  refreshToken: AuthUtils.refreshToken,
+var defaultOptions = exports.defaultOptions = {
+  getAuthToken: _TokenUtils2.default.getAuthToken,
+  setAuthToken: _TokenUtils2.default.setAuthToken,
+  removeAuthToken: _TokenUtils2.default.removeAuthToken,
+  getToken: _AuthUtils2.default.getToken,
+  refreshToken: _AuthUtils2.default.refreshToken,
   inactivitySignoutSec: 3500,
   oauthClientId: 'acme',
   oauthClientSecret: 'acmesecret'
 };
 
 var getTokenAuthorizationCall = function getTokenAuthorizationCall(options, credentialsOrToken) {
-  if (TokenUtils.toToken(credentialsOrToken)) return call(options.refreshToken, credentialsOrToken);else if (credentialsOrToken.username && credentialsOrToken.password) return call(options.getToken, credentialsOrToken.username, credentialsOrToken.password);
+  if (_TokenUtils2.default.toToken(credentialsOrToken)) return (0, _effects.call)(options.refreshToken, credentialsOrToken);else if (credentialsOrToken.username && credentialsOrToken.password) return (0, _effects.call)(options.getToken, credentialsOrToken.username, credentialsOrToken.password);
 
   throw new Error('Programming error...expected Credentials, or Token');
 };
@@ -45,9 +66,9 @@ function watchForInactivity(options) {
           }
 
           _context.next = 3;
-          return race({
-            expired: delay(options.inactivitySignoutSec * 1000, true),
-            activity: take('*')
+          return (0, _effects.race)({
+            expired: (0, _reduxSaga.delay)(options.inactivitySignoutSec * 1000, true),
+            activity: (0, _effects.take)('*')
           });
 
         case 3:
@@ -64,7 +85,7 @@ function watchForInactivity(options) {
 
         case 8:
           _context.next = 10;
-          return put(signOut());
+          return (0, _effects.put)((0, _actions.signOut)());
 
         case 10:
           _context.next = 0;
@@ -78,22 +99,22 @@ function watchForInactivity(options) {
   }, _marked[0], this);
 }
 
-export function authorize(options, credentialsOrToken) {
+function authorize(options, credentialsOrToken) {
   var authFailureConstant, raceResponse, token;
   return regeneratorRuntime.wrap(function authorize$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return put(authenticating(true));
+          return (0, _effects.put)((0, _actions.authenticating)(true));
 
         case 2:
-          authFailureConstant = TokenUtils.toToken(credentialsOrToken) ? Constants.REFRESH_TOKEN : Constants.GET_TOKEN;
+          authFailureConstant = _TokenUtils2.default.toToken(credentialsOrToken) ? Constants.REFRESH_TOKEN : Constants.GET_TOKEN;
           _context2.prev = 3;
           _context2.next = 6;
-          return race({
+          return (0, _effects.race)({
             token: getTokenAuthorizationCall(options, credentialsOrToken),
-            signout: take(Constants.SIGN_OUT)
+            signout: (0, _effects.take)(Constants.SIGN_OUT)
           });
 
         case 6:
@@ -104,7 +125,7 @@ export function authorize(options, credentialsOrToken) {
             break;
           }
 
-          token = TokenUtils.toToken(raceResponse.token);
+          token = _TokenUtils2.default.toToken(raceResponse.token);
 
           if (!token) {
             _context2.next = 15;
@@ -112,11 +133,11 @@ export function authorize(options, credentialsOrToken) {
           }
 
           _context2.next = 12;
-          return call(options.setAuthToken, token);
+          return (0, _effects.call)(options.setAuthToken, token);
 
         case 12:
           _context2.next = 14;
-          return put(authSuccess(token));
+          return (0, _effects.put)((0, _actions.authSuccess)(token));
 
         case 14:
           return _context2.abrupt('return', token);
@@ -141,7 +162,7 @@ export function authorize(options, credentialsOrToken) {
           _context2.prev = 21;
           _context2.t0 = _context2['catch'](3);
           _context2.next = 25;
-          return put(authFailure(_context2.t0, authFailureConstant));
+          return (0, _effects.put)((0, _actions.authFailure)(_context2.t0, authFailureConstant));
 
         case 25:
           return _context2.abrupt('return', null);
@@ -149,14 +170,14 @@ export function authorize(options, credentialsOrToken) {
         case 26:
           _context2.prev = 26;
           _context2.next = 29;
-          return put(authenticating(false));
+          return (0, _effects.put)((0, _actions.authenticating)(false));
 
         case 29:
           return _context2.finish(26);
 
         case 30:
           _context2.next = 32;
-          return put(authFailure(Constants.INVALID_TOKEN_ERR, authFailureConstant));
+          return (0, _effects.put)((0, _actions.authFailure)(Constants.INVALID_TOKEN_ERR, authFailureConstant));
 
         case 32:
           return _context2.abrupt('return', null);
@@ -169,7 +190,7 @@ export function authorize(options, credentialsOrToken) {
   }, _marked[1], this, [[3, 21, 26, 30]]);
 }
 
-export function authenticationSaga(opts) {
+function authenticationSaga(opts) {
   return regeneratorRuntime.mark(function saga() {
     var options, inactivityWatcher, token, loginAction, _username, _password, raceResponse;
 
@@ -183,12 +204,12 @@ export function authenticationSaga(opts) {
 
             // Push variables into AuthUtils
 
-            AuthUtils.setClientId(options.clientId);
-            AuthUtils.setClientSecret(options.clientSecret);
+            _AuthUtils2.default.setClientId(options.clientId);
+            _AuthUtils2.default.setClientSecret(options.clientSecret);
 
             // Get the existing token - if any
             _context3.next = 6;
-            return call(options.getAuthToken);
+            return (0, _effects.call)(options.getAuthToken);
 
           case 6:
             token = _context3.sent;
@@ -205,7 +226,7 @@ export function authenticationSaga(opts) {
             }
 
             _context3.next = 11;
-            return call(authorize, options, token);
+            return (0, _effects.call)(authorize, options, token);
 
           case 11:
             token = _context3.sent;
@@ -217,7 +238,7 @@ export function authenticationSaga(opts) {
             }
 
             _context3.next = 15;
-            return take(Constants.LOG_IN);
+            return (0, _effects.take)(Constants.LOG_IN);
 
           case 15:
             loginAction = _context3.sent;
@@ -232,7 +253,7 @@ export function authenticationSaga(opts) {
           case 18:
             _username = loginAction.username, _password = loginAction.password;
             _context3.next = 21;
-            return call(authorize, options, { username: _username, password: _password });
+            return (0, _effects.call)(authorize, options, { username: _username, password: _password });
 
           case 21:
             token = _context3.sent;
@@ -249,16 +270,16 @@ export function authenticationSaga(opts) {
             }
 
             _context3.next = 26;
-            return fork(watchForInactivity, options);
+            return (0, _effects.fork)(watchForInactivity, options);
 
           case 26:
             inactivityWatcher = _context3.sent;
 
           case 27:
             _context3.next = 29;
-            return race({
-              expired: delay(token.expires_in * 1000, true), // TODO: Go XXXX seconds early?
-              signout: take(Constants.SIGN_OUT)
+            return (0, _effects.race)({
+              expired: (0, _reduxSaga.delay)(token.expires_in * 1000, true), // TODO: Go XXXX seconds early?
+              signout: (0, _effects.take)(Constants.SIGN_OUT)
             });
 
           case 29:
@@ -277,7 +298,7 @@ export function authenticationSaga(opts) {
 
             // Remove the token from the stored
             _context3.next = 34;
-            return call(options.removeAuthToken);
+            return (0, _effects.call)(options.removeAuthToken);
 
           case 34:
 
@@ -296,4 +317,4 @@ export function authenticationSaga(opts) {
   });
 }
 
-export default [authenticationSaga];
+exports.default = [authenticationSaga];

@@ -1,8 +1,12 @@
-/*
- * Login Actions
- */
+'use strict';
 
-import { CHANGE_USERNAME, CHANGE_PASSWORD } from './constants';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.changeUsername = changeUsername;
+exports.changePassword = changePassword;
+
+var _constants = require('./constants');
 
 /**
  * Changes the input field of the form
@@ -11,16 +15,18 @@ import { CHANGE_USERNAME, CHANGE_PASSWORD } from './constants';
  *
  * @return {object}    An action object with a type of CHANGE_USERNAME
  */
-export function changeUsername(username) {
+function changeUsername(username) {
   return {
-    type: CHANGE_USERNAME,
+    type: _constants.CHANGE_USERNAME,
     username: username
   };
-}
+} /*
+   * Login Actions
+   */
 
-export function changePassword(password) {
+function changePassword(password) {
   return {
-    type: CHANGE_PASSWORD,
+    type: _constants.CHANGE_PASSWORD,
     password: password
   };
 }
