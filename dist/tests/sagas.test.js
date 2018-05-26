@@ -8,11 +8,15 @@ var _sagas = require('../sagas');
 
 var _constants = require('../constants');
 
-var _actions = require('../actions');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mockValidToken = { access_token: '370592fd-b9f8-452d-816a-4fd5c6b4b8a6', token_type: 'bearer', expires_in: 10, scope: 'read write', refresh_token: '0ed8ffc6-f013-43a3-96bd-5a9565d63152' };
+var mockValidToken = {
+  access_token: '370592fd-b9f8-452d-816a-4fd5c6b4b8a6',
+  token_type: 'bearer',
+  expires_in: 10,
+  scope: 'read write',
+  refresh_token: '0ed8ffc6-f013-43a3-96bd-5a9565d63152'
+};
 
 describe('authenticationSaga saga', function () {
   it('should take in options and return generator', function () {
@@ -66,7 +70,9 @@ describe('authenticationSaga saga', function () {
         var waitForExpiredRace = generator.next().value;
 
         // Should revoke the token from local storage
-        var callRemoveAuthToken = generator.next({ signout: { type: _constants.SIGN_OUT } }).value;
+        var callRemoveAuthToken = generator.next({
+          signout: { type: _constants.SIGN_OUT }
+        }).value;
         (0, _expect2.default)(callRemoveAuthToken.CALL.fn.name).toBe('removeAuthToken');
 
         // Returns the logout
@@ -85,9 +91,16 @@ describe('authenticationSaga saga', function () {
         (0, _expect2.default)(takeLogin.TAKE.pattern).toBe(_constants.LOG_IN);
 
         // Return's a LOG_IN action w/ username / password
-        var callToAuthorize = generator.next({ type: _constants.LOG_IN, username: 'jcrygier', password: 'Password12' }).value;
+        var callToAuthorize = generator.next({
+          type: _constants.LOG_IN,
+          username: 'jcrygier',
+          password: 'Password12'
+        }).value;
         (0, _expect2.default)(callToAuthorize.CALL.fn.name).toBe('authorize');
-        (0, _expect2.default)(callToAuthorize.CALL.args[1]).toEqual({ username: 'jcrygier', password: 'Password12' });
+        (0, _expect2.default)(callToAuthorize.CALL.args[1]).toEqual({
+          username: 'jcrygier',
+          password: 'Password12'
+        });
       });
 
       it('successful call to authorize user/password', function () {
@@ -127,7 +140,8 @@ describe('authorize saga', function () {
     beforeEach(function () {
       generator = (0, _sagas.authorize)(_sagas.defaultOptions, mockValidToken);
 
-      var raceForRefreshOrSignout = generator.next().value;
+      generator.next(); // authenticating start
+      var raceForRefreshOrSignout = generator.next().value; // race
       (0, _expect2.default)(raceForRefreshOrSignout.RACE.signout.TAKE.pattern).toBe(_constants.SIGN_OUT);
       (0, _expect2.default)(raceForRefreshOrSignout.RACE.token.CALL.fn.name).toBe('refreshToken');
       (0, _expect2.default)(raceForRefreshOrSignout.RACE.token.CALL.args[0]).toBe(mockValidToken);
@@ -145,13 +159,16 @@ describe('authorize saga', function () {
       (0, _expect2.default)(putAuthSuccess.PUT.action.token).toBe(mockValidToken);
 
       // Annnnnd....we're done
+      generator.next(); // authentication done
       var finished = generator.next();
       (0, _expect2.default)(finished.done).toExist();
       (0, _expect2.default)(finished.value).toBe(mockValidToken);
     });
 
     it('returns a null response from the refresh call', function () {
-      var putAuthFailure = generator.next({ token: null }).value;
+      var auth = generator.next({ token: null }).value;
+      (0, _expect2.default)(auth.PUT.action.type).toBe(_constants.AUTHENTICATING);
+      var putAuthFailure = generator.next().value;
       (0, _expect2.default)(putAuthFailure.PUT.action.type).toBe(_constants.AUTH_FAILURE);
       (0, _expect2.default)(putAuthFailure.PUT.action.error).toBe(_constants.INVALID_TOKEN_ERR);
       (0, _expect2.default)(putAuthFailure.PUT.action.authProcess).toBe(_constants.REFRESH_TOKEN);
@@ -171,13 +188,15 @@ describe('authorize saga', function () {
       (0, _expect2.default)(putAuthFailure.PUT.action.authProcess).toBe(_constants.REFRESH_TOKEN);
 
       // Annnnnd....we're done
+      generator.next(); // authentication done
       var finished = generator.next();
       (0, _expect2.default)(finished.done).toExist();
       (0, _expect2.default)(finished.value).toBe(null);
     });
 
     it('signs out before the refresh can occur', function () {
-      var finished = generator.next({ signout: true });
+      generator.next({ signout: true }); // authentication done
+      var finished = generator.next();
       (0, _expect2.default)(finished.done).toExist();
       (0, _expect2.default)(finished.value).toBe(null);
     });
